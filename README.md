@@ -1,4 +1,4 @@
-## HASHGEN 
+# HASHGEN 
 A Simple tool to generate hashes. MD5, SHA1, SHA256
 
 I created this tool because the existent tools was lame and some of them is a paid Tool/Shareware for a "free" tool offered by Microsoft, and i can's stand PowerShell Syntax.
@@ -14,7 +14,7 @@ Dependencies:
 - [ ] Add Linux Support
 - [ ] Add MacOS Support (i'm poor)
 - [ ] Create a Fully Executable with PyInstaller
-- [ ] Add Copy Hash to Clipboard Button
+- [x] Add Copy Hash to Clipboard Button
 
 ## Screenshots
 

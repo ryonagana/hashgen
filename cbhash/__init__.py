@@ -1,11 +1,14 @@
 import sys
 import os
+import PySide2
 from PySide2.QtWidgets import QApplication
 from PySide2.QtUiTools import QUiLoader
 
-from PySide2.QtWidgets import QFileDialog
-from PySide2.QtCore import QThreadPool
+from PySide2.QtWidgets import QFileDialog, QMessageBox
+from PySide2.QtCore import QThreadPool, QTimer
 import cbhash.hash_worker
+
+import cbhash.resources
 
 class Application(QApplication):
 
@@ -16,19 +19,67 @@ class Application(QApplication):
 
         self.loader = QUiLoader()
 
-        self.window = self.loader.load("res//main.ui")
-        self.progress_widget = self.loader.load("res//progress.ui")
+        self.window = self.loader.load(":/main.ui")
+        self.progress_widget = self.loader.load(":/progress.ui")
         
         self.isDone = False
         self.thread_pool  = QThreadPool()
 
+        self.init()
         self.connect()
+
+    def init(self):
+        self.window.labelStatus.setText("")
 
     def connect(self):
         self.window.acLoadFile.triggered.connect(self.actionLoadFile)
         self.window.btnLoadFile.setDefaultAction(self.window.acLoadFile)
+        self.window.acClipMD5.triggered.connect(self.copyToClipboardMD5)
+        self.window.btnCopyMD5.setDefaultAction(self.window.acClipMD5)
+
+        self.window.acClipSHA256.triggered.connect(self.copyToClipboardSHA256)
+        self.window.btnCopySHA256.setDefaultAction(self.window.acClipSHA256)
+
+        self.window.acClipSHA512.triggered.connect(self.copyToClipboardSHA512)
+        self.window.btnCopySHA512.setDefaultAction(self.window.acClipSHA512)
+        
+    
+    def copyToClipboardMD5(self):
+        self.checkHasDone()
+
+        clipboard = QApplication.clipboard()
+        md5 = self.window.fieldMD5.toPlainText()
+        clipboard.setText(md5)
+        self.window.labelStatus.setText("Hash MD5 Copied to Clipboard!")
+        QTimer.singleShot(10000, self.cleanStatusLabelInterval)
+        
+    def copyToClipboardSHA256(self):
+        self.checkHasDone()
+
+        clip = QApplication.clipboard()
+        sha = self.window.fieldSHA256.toPlainText()
+        clip.setText(sha)
+        self.window.labelStatus.setText("Hash SHA256 Copied to Clipboard!")
+        QTimer.singleShot(10000, self.cleanStatusLabelInterval)
+        
+
+    def copyToClipboardSHA512(self):
+        self.checkHasDone()
+        clip = QApplication.clipboard()
+        sha = self.window.fieldSHA512.toPlainText()
+        clip.setText(sha)
+        self.window.labelStatus.setText("Hash SHA512 Copied to Clipboard!")
+        QTimer.singleShot(10000, self.cleanStatusLabelInterval)
+    
+    def checkHasDone(self):
+        if not self.isDone:
+            QMessageBox.warning(self.window, "Warning", "No File Loaded")
+
+    def cleanStatusLabelInterval(self):
+        self.window.labelStatus.setText("")
 
     def actionLoadFile(self):
+        fnames = None 
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.ExistingFile)
         dialog.setViewMode(QFileDialog.Detail)
@@ -48,6 +99,7 @@ class Application(QApplication):
         worker.signals.hashlists.connect(self.get_hashes)
         self.thread_pool.start(worker)
         self.progress_widget.exec_()
+        self.isDone = True
             
         
     def get_hashes(self, value):

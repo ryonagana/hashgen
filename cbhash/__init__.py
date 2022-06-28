@@ -125,8 +125,3 @@ class Application(QApplication):
 def run():
     app = Application()
     app.run()
-
-
-if __name__ == "__main__":
-    app = Application()
-    app.run()

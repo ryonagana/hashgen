@@ -5,7 +5,7 @@ from PySide2.QtUiTools import QUiLoader
 
 from PySide2.QtWidgets import QFileDialog
 from PySide2.QtCore import QThreadPool
-import hash_worker
+import cbhash.hash_worker
 
 class Application(QApplication):
 
@@ -42,7 +42,7 @@ class Application(QApplication):
         self.filepath = fnames[0]
         self.window.txtFile.setPlainText(os.path.basename(fnames[0]))
 
-        worker = hash_worker.HashWorker(filename=self.filepath)
+        worker = cbhash.hash_worker.HashWorker(filename=self.filepath)
 
         worker.signals.progress.connect(self.show_progress)
         worker.signals.hashlists.connect(self.get_hashes)

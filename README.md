@@ -1,7 +1,7 @@
 # HASHGEN 
 A Simple tool to generate hashes. MD5, SHA1, SHA256
 
-I created this tool because the existent tools was lame and some of them is a paid Tool/Shareware for a "free" tool offered by Microsoft, and i can's stand PowerShell Syntax.
+I created this tool because the existent tools was lame and most of them are  paid sharewares for a "free" tool offered by Microsoft, and i can's stand PowerShell Syntax.
 
 Dependencies:
 - PySide2 
@@ -19,6 +19,7 @@ Dependencies:
 ## Screenshots
 
 The first Ugly Template
+![testing with ISO](hashgen_iso.png)
 ![Screenhshot After Opening](hashgen01.png)
 ![Loading File](hashgen02.png)
 ![Hash After Load](hashgen03.png)

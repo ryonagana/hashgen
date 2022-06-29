@@ -1,6 +1,10 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
+
+<RCC version="1.0">
+<qresource prefix="/">
     <file>main.ui</file>
     <file>progress.ui</file>
+    <file>dark/window.qss</file>
 </qresource>
+
+
 </RCC>

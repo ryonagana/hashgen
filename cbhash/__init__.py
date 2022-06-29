@@ -1,18 +1,25 @@
 import sys
 import os
-import PySide2
+import logging
 from PySide2.QtWidgets import QApplication
 from PySide2.QtUiTools import QUiLoader
 
 from PySide2.QtWidgets import QFileDialog, QMessageBox
-from PySide2.QtCore import QThreadPool, QTimer
+from PySide2.QtCore import QThreadPool, QTimer, QFile, QTextStream
 import cbhash.hash_worker
 
 import cbhash.resources
 
+
 class Application(QApplication):
 
     filepath = ""
+    
+    styles = {'dark':
+                [':/dark/window.qss',]
+              }
+    
+    style_default = "dark"
 
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(sys.argv)
@@ -28,9 +35,56 @@ class Application(QApplication):
         self.init()
         self.connect()
 
+        style = self.loadStylesheet(self.style_default)
+        self.setStyleSheet(style)
+
     def init(self):
         self.window.labelStatus.setText("")
+        self.window.txtFile.setText("No File Loaded!")
+    
+    def actionMenuSaveAs(self):
+        name = ""
+        save = QFileDialog()
+        save.setAcceptMode(QFileDialog.AcceptSave)
+        #save.setFileMode(QFileDialog.)
+        save.setViewMode(QFileDialog.Detail)
+        
+        if save.exec_():
+            name = save.selectedFiles()
 
+        data = self.window.fieldMD5.toPlainText()
+        print(data)
+        print(name)
+
+        
+        
+
+
+    def loadStylesheet(self, type):
+        
+        stylesheet = ""
+        
+        try:
+            for s in self.styles[type]:
+                f = QFile(s)
+                
+                if not f.exists():
+                    return
+                
+                f.open(QFile.ReadOnly | QFile.Text)
+                stream = QTextStream(f)
+                stylesheet += stream.readAll()
+                f.close()
+                return stylesheet
+        except IndexError:
+            logging.critical(f"Stylesheet Load Error, {type} Not Found!")
+            return None
+        except Exception as e:
+            logging.critical(f"Exception Trying load Style {type} - {e}")
+            return None
+        
+            
+    
     def connect(self):
         self.window.acLoadFile.triggered.connect(self.actionLoadFile)
         self.window.btnLoadFile.setDefaultAction(self.window.acLoadFile)
@@ -42,8 +96,19 @@ class Application(QApplication):
 
         self.window.acClipSHA512.triggered.connect(self.copyToClipboardSHA512)
         self.window.btnCopySHA512.setDefaultAction(self.window.acClipSHA512)
-        
+
+        self.window.acQuit.triggered.connect(self.quitApp)
+
+        self.window.acAboutQt.triggered.connect(self.MenuAboutQt)
+        self.window.acSaveAs.triggered.connect(self.actionMenuSaveAs)
     
+    def MenuAboutQt(self):
+        self.aboutQt()
+        return
+
+    def quitApp(self):
+        self.quit()
+
     def copyToClipboardMD5(self):
         self.checkHasDone()
 
@@ -91,7 +156,7 @@ class Application(QApplication):
             return
 
         self.filepath = fnames[0]
-        self.window.txtFile.setPlainText(os.path.basename(fnames[0]))
+        self.window.txtFile.setText(os.path.basename(fnames[0]))
 
         worker = cbhash.hash_worker.HashWorker(filename=self.filepath)
 

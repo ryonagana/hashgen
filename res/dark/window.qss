@@ -1,0 +1,61 @@
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 128, 255, 32), stop:1 rgba(0, 0, 0, 0) );
+    border-radius: 20px;
+    color: #000000;
+}
+
+QLabel#labelMD5 {
+    color: #FFFFFF;
+    border: 0;
+    font-size: 13px;
+}
+
+QLabel#labelSHA256 {
+    color: #FFFFFF;
+    border: 0;
+    font-size: 13px;
+}
+
+QLabel#labelSHA512 {
+    color: #FFFFFF;
+    border: 0;
+    font-size: 13px;
+}
+
+QLabel#txtFile {
+    color: #FFFFFF;
+    font-size:13px;
+}
+
+
+QLabel#labelStatus {
+    color: #FFFFFF;
+    font-size:13px;
+}
+
+QGroupBox {
+    color: #FFFFFF;
+    border-top: 1px;
+    font-weight:bold;
+    font-size: 13px;
+}
+
+QToolButton#btnLoadFile {
+    border-radius: 3px;
+    background: #95a5a6;
+}
+
+QToolButton#btnCopyMD5 {
+    border-radius: 3px;
+    background: #2c3e50;
+}
+
+QToolButton#btnCopySHA256 {
+    border-radius: 3px;
+    background: #2c3e50;
+}
+
+QToolButton#btnCopySHA512 {
+    border-radius: 3px;
+    background: #2c3e50;
+}

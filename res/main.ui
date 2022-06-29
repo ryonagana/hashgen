@@ -140,20 +140,20 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="labelMD5">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>40</y>
-       <width>47</width>
-       <height>13</height>
+       <width>31</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
       <string>MD5</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="labelSHA256">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -166,7 +166,7 @@
       <string>SHA256</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="labelSHA512">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -190,35 +190,32 @@
      </rect>
     </property>
     <property name="title">
-     <string>Load File:</string>
+     <string>File:</string>
     </property>
-    <widget class="QPlainTextEdit" name="txtFile">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>20</y>
-       <width>631</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QToolButton" name="btnLoadFile">
      <property name="geometry">
       <rect>
-       <x>710</x>
+       <x>750</x>
        <y>20</y>
-       <width>131</width>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="txtFile">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>15</y>
+       <width>721</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
      </property>
     </widget>
    </widget>
@@ -231,8 +228,14 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>...</string>
     </property>
    </widget>
   </widget>
@@ -249,25 +252,33 @@
     <property name="title">
      <string>File&amp;</string>
     </property>
-    <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
+    <addaction name="acSave"/>
+    <addaction name="acSaveAs"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="acQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="acAboutQt"/>
+    <addaction name="acAbout"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionSave">
+  <action name="acSave">
    <property name="text">
     <string>Save..</string>
    </property>
   </action>
-  <action name="actionSave_as">
+  <action name="acSaveAs">
    <property name="text">
     <string>Save as..</string>
    </property>
   </action>
-  <action name="actionQuit">
+  <action name="acQuit">
    <property name="text">
     <string>Quit</string>
    </property>
@@ -279,17 +290,27 @@
   </action>
   <action name="acClipMD5">
    <property name="text">
-    <string>Copy MD5 to Clipboard</string>
+    <string>Copy MD5</string>
    </property>
   </action>
   <action name="acClipSHA256">
    <property name="text">
-    <string>Copy SHA256 to Clipboard </string>
+    <string>Copy SHA256</string>
    </property>
   </action>
   <action name="acClipSHA512">
    <property name="text">
-    <string>Copy SHA512 to Clipboard </string>
+    <string>Copy SHA512</string>
+   </property>
+  </action>
+  <action name="acAboutQt">
+   <property name="text">
+    <string>Qt</string>
+   </property>
+  </action>
+  <action name="acAbout">
+   <property name="text">
+    <string>About..</string>
    </property>
   </action>
  </widget>

@@ -8,18 +8,24 @@ from PySide2.QtWidgets import QFileDialog, QMessageBox
 from PySide2.QtCore import QThreadPool, QTimer, QFile, QTextStream
 import cbhash.hash_worker
 
+from cbhash.hash_worker import HashWorker, HashType
+
 import cbhash.resources
 
 
 class Application(QApplication):
-
-    filepath = ""
     
+    
+    WORKER_COUNT: int = 3
+    
+    filepath = ""
     styles = {'dark':
                 [':/dark/window.qss',]
               }
     
     style_default = "dark"
+    
+    complete: int = 0
 
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(sys.argv)
@@ -144,12 +150,12 @@ class Application(QApplication):
         self.window.labelStatus.setText("")
 
     def actionLoadFile(self):
-        fnames = None 
+        fnames:str = None
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.ExistingFile)
         dialog.setViewMode(QFileDialog.Detail)
 
-        if(dialog.exec_()):
+        if dialog.exec_() :
             fnames = dialog.selectedFiles()
 
         if not fnames:
@@ -158,23 +164,65 @@ class Application(QApplication):
         self.filepath = fnames[0]
         self.window.txtFile.setText(os.path.basename(fnames[0]))
 
-        worker = cbhash.hash_worker.HashWorker(filename=self.filepath)
+        
+        workers = [HashWorker(filename=self.filepath, hash_type=HashType.MD5),
+                   HashWorker(filename=self.filepath, hash_type=HashType.SHA256),
+                   HashWorker(filename=self.filepath, hash_type=HashType.SHA512)]
+        
+        for i, w in enumerate(workers):
+            
+            #w.signals.progress.emit((i / len(workers)) * 100)
+            w.signals.progress.connect(self.show_progress)
+            w.signals.hash_str.connect(self.get_hashes)
+            w.signals.increase_progress.connect(self.update_progress)
+            self.thread_pool.start(w)
 
+        
+        
+        
+        
+        self.isDone = True
+        
+        self.progress_widget.exec_()
+        
+        if self.isDone:
+            self.window.btnLoadFile.setText("Regenerate Hashes")
+       
+        
+        
+       
+        """
         worker.signals.progress.connect(self.show_progress)
         worker.signals.hashlists.connect(self.get_hashes)
         self.thread_pool.start(worker)
         self.progress_widget.exec_()
         self.isDone = True
+        """
+    def update_progress(self, progress:int):
+        self.complete += progress
+        
+        pc = (self.complete / self.WORKER_COUNT) * 100
+        self.progress_widget.progressBar.setValue(pc)
+        if pc >= 100:
+            self.progress_widget.close()
+        
+
+    def get_hashes(self, value, hash_type):
+        
+        if hash_type == HashType.MD5:
+            self.window.fieldMD5.setPlainText(value)
+        
+        if hash_type == HashType.SHA256:
+            self.window.fieldSHA256.setPlainText(value)
+
+        if hash_type == HashType.SHA512:
+            self.window.fieldSHA512.setPlainText(value)
             
         
-    def get_hashes(self, value):
-        self.window.fieldMD5.setPlainText(value['MD5'])
-        self.window.fieldSHA256.setPlainText(value['SHA256'])
-        self.window.fieldSHA512.setPlainText(value['SHA512'])
-        pass
+        return
 
     def show_progress(self, pc):
-        print(f"{pc}")
+        print(f"AUI AUI {pc}")
 
         self.progress_widget.progressBar.setValue(pc)
 

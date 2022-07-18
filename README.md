@@ -19,7 +19,6 @@ Dependencies:
 ## Screenshots
 
 The first Ugly Template
-![testing with ISO](hashgen_iso.png)
 ![Screenhshot After Opening](hashgen01.png)
 ![Loading File](hashgen02.png)
 ![Hash After Load](hashgen03.png)

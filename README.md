@@ -8,17 +8,17 @@ Dependencies:
 
 ## TODO LIST:
 - [x] Added Hash Tool for Windows 7 (Minimum)
-- [ ] Fix Ugly Template 
+- [ ] Fix Ugly Template
 - [ ] Save a HashFile 
 - [ ] Add a Shell Context a.k.a Mouse Right Button (Windows Only)
 - [ ] Add Linux Support
 - [ ] Add MacOS Support (i'm poor)
 - [ ] Create a Fully Executable with PyInstaller
 - [x] Add Copy Hash to Clipboard Button
+- [ ] Add Program argv params  
 
 ## Screenshots
 
-The first Ugly Template
 ![Screenhshot After Opening](hashgen01.png)
 ![Loading File](hashgen02.png)
 ![Hash After Load](hashgen03.png)

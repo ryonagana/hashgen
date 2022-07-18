@@ -5,6 +5,7 @@ import sys
 import os
 import platform
 from subprocess import Popen
+import subprocess
 from PySide2.QtCore import QThread, Signal, Slot
 from PySide2.QtCore import QObject, QRunnable
 from PySide2.QtWidgets import QMessageBox
@@ -66,11 +67,23 @@ class HashWorker(QRunnable):
             
         if hash_type == HashType.SHA512:
             hash_str = "SHA512"
-
+		
         command_line = ['certUtil', '-hashfile', self.filepath, hash_str]
-        process = Popen(command_line, stdout=subprocess.PIPE)
-        res = process.communicate()[0]
-        
+		
+		
+		#this fix a weird glitch from Popen when invoke a windows cmd for each request of Popen, even using PIPE 
+		#its just a fast flash of cmd 
+		#thanks to  https://stackoverflow.com/questions/24455337/pyinstaller-on-windows-with-noconsole-simply-wont-work
+		#i got this fixed
+		
+        if self.whichOS() == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            process = Popen(command_line, startupinfo=startupinfo, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            process = Popen(command_line, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+		
+        res = process.communicate()[0] 
         return res
     
     @Slot()

@@ -192,7 +192,10 @@
     <property name="title">
      <string>File:</string>
     </property>
-    <widget class="QToolButton" name="btnLoadFile">
+    <widget class="QToolButton" name="btnClear">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>750</x>
@@ -210,12 +213,25 @@
       <rect>
        <x>10</x>
        <y>15</y>
-       <width>721</width>
+       <width>421</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
       <string>TextLabel</string>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="btnLoadFile">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>20</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
      </property>
     </widget>
    </widget>
@@ -285,7 +301,7 @@
   </action>
   <action name="acLoadFile">
    <property name="text">
-    <string>Load File</string>
+    <string>Load a File</string>
    </property>
   </action>
   <action name="acClipMD5">
@@ -311,6 +327,19 @@
   <action name="acAbout">
    <property name="text">
     <string>About..</string>
+   </property>
+  </action>
+  <action name="acClearHash">
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clears hashes and unload the file</string>
+   </property>
+  </action>
+  <action name="acRegenHashes">
+   <property name="text">
+    <string>Regenerate hashes</string>
    </property>
   </action>
  </widget>

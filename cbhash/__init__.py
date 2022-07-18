@@ -43,6 +43,7 @@ class Application(QApplication):
 
         style = self.loadStylesheet(self.style_default)
         self.setStyleSheet(style)
+        self.window.btnClear.setEnabled(False)
 
     def init(self):
         self.window.labelStatus.setText("")
@@ -107,6 +108,12 @@ class Application(QApplication):
 
         self.window.acAboutQt.triggered.connect(self.MenuAboutQt)
         self.window.acSaveAs.triggered.connect(self.actionMenuSaveAs)
+        
+        self.window.acClearHash.triggered.connect(self.action_clear)
+        self.window.btnClear.setDefaultAction(self.window.acClearHash)
+        
+        
+        self.window.acRegenHashes.triggered.connect(self.action_regenerate_hashes)
     
     def MenuAboutQt(self):
         self.aboutQt()
@@ -148,7 +155,33 @@ class Application(QApplication):
 
     def cleanStatusLabelInterval(self):
         self.window.labelStatus.setText("")
-
+    
+    def startWorkers(self):
+        workers = [HashWorker(filename=self.filepath, hash_type=HashType.MD5),
+                   HashWorker(filename=self.filepath, hash_type=HashType.SHA256),
+                   HashWorker(filename=self.filepath, hash_type=HashType.SHA512)]
+    
+        for i, w in enumerate(workers):
+            if i > self.WORKER_COUNT:
+                break
+            
+            # w.signals.progress.emit((i / len(workers)) * 100)
+            w.signals.hash_str.connect(self.get_hashes)
+            w.signals.increase_progress.connect(self.update_progress)
+            self.thread_pool.start(w)
+    
+        self.isDone = True
+    
+        self.progress_widget.exec_()
+    
+        if self.isDone:
+            #self.window.btnLoadFile.setText("Regenerate Hashes")
+            self.window.btnLoadFile.setDefaultAction(self.window.acRegenHashes)
+            self.window.btnClear.setEnabled(True)
+            
+            
+        return
+    
     def actionLoadFile(self):
         fnames:str = None
         dialog = QFileDialog()
@@ -163,8 +196,10 @@ class Application(QApplication):
 
         self.filepath = fnames[0]
         self.window.txtFile.setText(os.path.basename(fnames[0]))
-
+        self.startWorkers()
         
+        
+        """
         workers = [HashWorker(filename=self.filepath, hash_type=HashType.MD5),
                    HashWorker(filename=self.filepath, hash_type=HashType.SHA256),
                    HashWorker(filename=self.filepath, hash_type=HashType.SHA512)]
@@ -172,33 +207,13 @@ class Application(QApplication):
         for i, w in enumerate(workers):
             
             #w.signals.progress.emit((i / len(workers)) * 100)
-            w.signals.progress.connect(self.show_progress)
             w.signals.hash_str.connect(self.get_hashes)
             w.signals.increase_progress.connect(self.update_progress)
             self.thread_pool.start(w)
-
-        
-        
-        
-        
-        self.isDone = True
-        
-        self.progress_widget.exec_()
-        
-        if self.isDone:
-            self.window.btnLoadFile.setText("Regenerate Hashes")
-       
-        
+        """
         
        
-        """
-        worker.signals.progress.connect(self.show_progress)
-        worker.signals.hashlists.connect(self.get_hashes)
-        self.thread_pool.start(worker)
-        self.progress_widget.exec_()
-        self.isDone = True
-        """
-    def update_progress(self, progress:int):
+    def update_progress(self, progress: int):
         self.complete += progress
         
         pc = (self.complete / self.WORKER_COUNT) * 100
@@ -206,7 +221,6 @@ class Application(QApplication):
         if pc >= 100:
             self.progress_widget.close()
         
-
     def get_hashes(self, value, hash_type):
         
         if hash_type == HashType.MD5:
@@ -217,23 +231,31 @@ class Application(QApplication):
 
         if hash_type == HashType.SHA512:
             self.window.fieldSHA512.setPlainText(value)
-            
-        
         return
-
-    def show_progress(self, pc):
-        print(f"AUI AUI {pc}")
-
-        self.progress_widget.progressBar.setValue(pc)
-
-        if pc >= 100:
-            self.progress_widget.close()
-        
 
     def run(self):
         self.window.showNormal()
         sys.exit(self.exec_())
 
+
+
+    def action_clear(self):
+        self.isDone = False
+        self.filepath = ""
+        self.window.fieldSHA512.setPlainText("")
+        self.window.fieldSHA256.setPlainText("")
+        self.window.fieldMD5.setPlainText("")
+        self.window.btnClear.setEnabled(False)
+        self.window.btnLoadFile.setDefaultAction(self.window.acLoadFile)
+        
+        
+        pass
+
+    def action_regenerate_hashes(self):
+        if self.isDone:
+            self.startWorkers()
+        
+        return
 
 def run():
     app = Application()

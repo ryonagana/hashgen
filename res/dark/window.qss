@@ -45,6 +45,11 @@ QToolButton#btnLoadFile {
     background: #95a5a6;
 }
 
+QToolButton#btnClear {
+    border-radius: 3px;
+    background: #95a5a6;
+}
+
 QToolButton#btnCopyMD5 {
     border-radius: 3px;
     background: #2c3e50;

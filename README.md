@@ -3,6 +3,8 @@ A Simple tool to generate hashes. MD5, SHA1, SHA256
 
 I created this tool because the existent tools was lame and most of them are  paid sharewares for a "free" tool offered by Microsoft, and i can's stand PowerShell Syntax.
 
+### Please Use Python 3.8+
+
 Dependencies:
 - PySide2 
 

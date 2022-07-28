@@ -20,7 +20,7 @@ class Application(QApplication):
     
     filepath = ""
     styles = {'dark':
-                [':/dark/window.qss',]
+                [':/dark/window.qss', ]
               }
     
     style_default = "dark"
@@ -175,11 +175,8 @@ class Application(QApplication):
         self.progress_widget.exec_()
     
         if self.isDone:
-            #self.window.btnLoadFile.setText("Regenerate Hashes")
             self.window.btnLoadFile.setDefaultAction(self.window.acRegenHashes)
             self.window.btnClear.setEnabled(True)
-            
-            
         return
     
     def actionLoadFile(self):
@@ -197,21 +194,6 @@ class Application(QApplication):
         self.filepath = fnames[0]
         self.window.txtFile.setText(os.path.basename(fnames[0]))
         self.startWorkers()
-        
-        
-        """
-        workers = [HashWorker(filename=self.filepath, hash_type=HashType.MD5),
-                   HashWorker(filename=self.filepath, hash_type=HashType.SHA256),
-                   HashWorker(filename=self.filepath, hash_type=HashType.SHA512)]
-        
-        for i, w in enumerate(workers):
-            
-            #w.signals.progress.emit((i / len(workers)) * 100)
-            w.signals.hash_str.connect(self.get_hashes)
-            w.signals.increase_progress.connect(self.update_progress)
-            self.thread_pool.start(w)
-        """
-        
        
     def update_progress(self, progress: int):
         self.complete += progress

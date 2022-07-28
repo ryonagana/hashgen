@@ -11,14 +11,18 @@ Dependencies:
 - [ ] Fix Ugly Template
 - [ ] Save a HashFile 
 - [ ] Add a Shell Context a.k.a Mouse Right Button (Windows Only)
-- [ ] Add Linux Support
+- [x] Add Linux Support (generate Hashes)
 - [ ] Add MacOS Support (i'm poor)
 - [ ] Create a Fully Executable with PyInstaller
 - [x] Add Copy Hash to Clipboard Button
-- [ ] Add Program argv params  
+- [ ] Add Program argv params
+- [ ] Fix a SIGSEGV when closing the program
+
+#### Release 1.0 only if finish all TODO list above
 
 ## Screenshots
 
+![Hash Gen Linux](hashgen_linux.png)
 ![Screenhshot After Opening](hashgen01.png)
 ![Loading File](hashgen02.png)
 ![Hash After Load](hashgen03.png)

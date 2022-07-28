@@ -1,6 +1,6 @@
 from asyncio import subprocess
-from asyncio.subprocess import STDOUT
-from asyncio.windows_utils import pipe
+#from asyncio.subprocess import STDOUT
+#from asyncio.windows_utils import pipe
 import sys
 import os
 import platform
@@ -54,9 +54,27 @@ class HashWorker(QRunnable):
         r = result.decode('utf-8','backslashreplace')
         r = r.split('\r')[1].replace('\n','').replace(' ','')
         return r
+
+    def run_shell_linux(self,  cmd:list):
+        proc = Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        return proc
+
+    def run_process_linux(self, hash_type:HashType = None):
+        hash_chosen:str = "md5sum"
+
+        if hash_type == HashType.MD5 or not type:
+            hash_chosen = "md5sum"
+        if hash_type == HashType.SHA256:
+            hash_chosen = "sha256sum"
+        if hash_type == HashType.SHA512:
+            hash_chosen = "sha512sum"
+
+        proc = self.run_shell_linux([hash_chosen, self.filepath])
+        result = proc.communicate()[0].decode("utf-8")
+        return result.split(" ", 1)
+
     
-    
-    def run_process_window(self, hash_type:HashType =  None):
+    def run_process_windows(self, hash_type:HashType =  None):
         hash_str = "MD5"
         
         if hash_type == HashType.MD5 or not type:
@@ -91,10 +109,15 @@ class HashWorker(QRunnable):
 
 
         if self.whichOS() == "win32":
-            result = self.run_process_window(self.hash_type)
+            result = self.run_process_windows(self.hash_type)
             self.signals.hash_str.emit(self.fix_str_communicate(result), self.hash_type)
-            self.signals.increase_progress.emit(1);
-            
+            self.signals.increase_progress.emit(1)
+
+        if self.whichOS() == "linux":
+            result = self.run_process_linux(self.hash_type)
+            self.signals.hash_str.emit(result[0], self.hash_type)
+            self.signals.increase_progress.emit(1)
+
         else:
             QMessageBox.critical(self, "Error:", "Unknown OS\nSorry!")
         return

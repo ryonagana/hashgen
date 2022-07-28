@@ -15,7 +15,7 @@ Dependencies:
 - [ ] Add a Shell Context a.k.a Mouse Right Button (Windows Only)
 - [x] Add Linux Support (generate Hashes)
 - [ ] Add MacOS Support (i'm poor)
-- [ ] Create a Fully Executable with PyInstaller
+- [x] Create a Fully Executable with PyInstaller
 - [x] Add Copy Hash to Clipboard Button
 - [ ] Add Program argv params
 - [ ] Fix a SIGSEGV when closing the program
